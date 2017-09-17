@@ -7011,7 +7011,8 @@ struct sign
 };
 
 static sign_T	*first_sign = NULL;
-static int	next_sign_typenr = 1;
+/* static int	next_sign_typenr = 1; */
+static int	next_sign_typenr = MAX_TYPENR;	/* is decremented */
 
 static int sign_cmd_idx(char_u *begin_cmd, char_u *end_cmd);
 static void sign_list_defined(sign_T *sp);
@@ -7112,9 +7113,6 @@ ex_sign(exarg_T *eap)
 		/* ":sign define {name} ...": define a sign */
 		if (sp == NULL)
 		{
-		    sign_T	*lp;
-		    int		start = next_sign_typenr;
-
 		    /* Allocate a new sign. */
 		    sp = (sign_T *)alloc_clear((unsigned)sizeof(sign_T));
 		    if (sp == NULL)
@@ -7123,6 +7121,14 @@ ex_sign(exarg_T *eap)
 		    /* Check that next_sign_typenr is not already being used.
 		     * This only happens after wrapping around.  Hopefully
 		     * another one got deleted and we can use its number. */
+
+                    if (VIM_ISDIGIT(*arg))
+                        sp->sn_typenr = atoi((char *)arg);
+                    else
+                    {
+                        sign_T	*lp;
+                        int     start = next_sign_typenr;
+
 		    for (lp = first_sign; lp != NULL; )
 		    {
 			if (lp->sn_typenr == next_sign_typenr)
@@ -7145,6 +7151,7 @@ ex_sign(exarg_T *eap)
 		    sp->sn_typenr = next_sign_typenr;
 		    if (++next_sign_typenr == MAX_TYPENR)
 			next_sign_typenr = 1; /* wrap around */
+                    }
 
 		    sp->sn_name = vim_strsave(arg);
 		    if (sp->sn_name == NULL)  /* out of memory */

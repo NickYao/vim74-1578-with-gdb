@@ -602,6 +602,11 @@ EXTERN char_u	*p_isi;		/* 'isident' */
 EXTERN char_u	*p_isp;		/* 'isprint' */
 EXTERN int	p_js;		/* 'joinspaces' */
 EXTERN char_u	*p_kp;		/* 'keywordprg' */
+#ifdef FEAT_GDB
+EXTERN long	p_asm;		/* 'asm' */
+EXTERN char_u	*p_gvar;	/* 'gdbvariables' */
+EXTERN char_u	*p_gdp;		/* 'gdbprg' */
+#endif
 EXTERN char_u	*p_km;		/* 'keymodel' */
 #ifdef FEAT_LANGMAP
 EXTERN char_u	*p_langmap;	/* 'langmap'*/

@@ -145,6 +145,9 @@ static void gui_x11_focus_change_cb(Widget w, XtPointer data, XEvent *event, Boo
 static void gui_x11_enter_cb(Widget w, XtPointer data, XEvent *event, Boolean *dum);
 static void gui_x11_leave_cb(Widget w, XtPointer data, XEvent *event, Boolean *dum);
 static void gui_x11_mouse_cb(Widget w, XtPointer data, XEvent *event, Boolean *dum);
+#ifdef FEAT_GDB
+static void gdb_request_cb __ARGS((XtPointer closure, int *source, XtInputId *id));
+#endif
 static void gui_x11_check_copy_area(void);
 #ifdef FEAT_CLIENTSERVER
 static void gui_x11_send_event_handler(Widget, XtPointer, XEvent *, Boolean *);
@@ -1159,6 +1162,21 @@ gui_x11_mouse_cb(
 
     gui_send_mouse_event(button, x, y, repeated_click, vim_modifiers);
 }
+
+#ifdef FEAT_GDB
+/*
+ * Callback function, used when data is available on the gdb file descriptor.
+ */
+/* ARGSUSED */
+    static void
+gdb_request_cb (closure, source, id)
+    XtPointer	closure;
+    int		*source;
+    XtInputId	*id;
+{
+    gdb_set_event(gdb, TRUE);
+}
+#endif
 
 /*
  * End of call-back routines
@@ -2562,6 +2580,11 @@ gui_mch_draw_string(
     }
 #endif
 
+#ifdef FEAT_GDB
+    static int gdb_on = 0;
+    static XtInputId gdb_input_id = 0;
+#endif
+
     if (flags & DRAW_TRANSP)
     {
 #ifdef FEAT_MBYTE
@@ -2777,7 +2800,13 @@ gui_mch_update(void)
 	desired = (XtIMAll);
     while ((mask = XtAppPending(app_context)) && (mask & desired)
 	    && !vim_is_input_buf_full())
+    {
+#ifdef FEAT_GDB
+	if (gdb_event(gdb))	/* got a gdb event */
+	    return;
+#endif
 	XtAppProcessEvent(app_context, desired);
+    }
 }
 
 /*
@@ -2803,6 +2832,25 @@ gui_mch_wait_for_chars(long wtime)
     XtInputMask	    desired;
 
     timed_out = FALSE;
+
+#ifdef FEAT_GDB
+    /* Remove call back for previous gdb connection */
+    if (! gdb_allowed(gdb) && gdb_on)
+    {
+	if (gdb_input_id)
+	    XtRemoveInput(gdb_input_id);
+	gdb_on = 0;
+    }
+
+    /* A new gdb connection */
+    if (gdb_allowed(gdb) && !gdb_on)
+    {
+	/* Add gdb file descriptor to watch for available data in main loop. */
+	gdb_input_id = XtAppAddInput(app_context, gdb_fd(gdb),
+		     (XtPointer)XtInputReadMask, gdb_request_cb, 0);
+	gdb_on = 1;
+    }
+#endif
 
     if (wtime > 0)
 	timer = XtAppAddTimeOut(app_context, (long_u)wtime, gui_x11_timer_cb,
@@ -2847,6 +2895,15 @@ gui_mch_wait_for_chars(long wtime)
 		XtRemoveTimeOut(timer);
 	    return OK;
 	}
+
+#ifdef FEAT_GDB
+	if (wtime != 0L && gdb_allowed(gdb) && gdb_event(gdb))
+	{
+	    if (timer != (XtIntervalId)0 && !timed_out)
+		XtRemoveTimeOut(timer);
+	    return FAIL;
+	}
+#endif
     }
     return FAIL;
 }

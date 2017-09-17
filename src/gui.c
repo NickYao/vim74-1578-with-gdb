@@ -1464,8 +1464,11 @@ again:
     /* Flush pending output before redrawing */
     out_flush();
 
-    gui.num_cols = (pixel_width - gui_get_base_width()) / gui.char_width;
-    gui.num_rows = (pixel_height - gui_get_base_height()) / gui.char_height;
+    /* gui.num_cols = (pixel_width - gui_get_base_width()) / gui.char_width; */
+    /* gui.num_rows = (pixel_height - gui_get_base_height()) / gui.char_height; */
+    gui.num_cols = ((pixel_width - gui_get_base_width()) / (float)gui.char_width) + 0.5;
+    gui.num_rows = ((pixel_height - gui_get_base_height()) / (float)gui.char_height) + 0.5;
+
 
     gui_position_components(pixel_width);
 
@@ -2891,6 +2894,10 @@ gui_wait_for_chars(long wtime)
 {
     int	    retval;
 
+#if defined(FEAT_GDB) && defined(HAVE_GETTIMEOFDAY) && defined(HAVE_SYS_TIME_H)
+    struct timeval  start_tv;
+    gettimeofday(&start_tv, NULL);
+#endif
 #ifdef FEAT_MENU
     /*
      * If we're going to wait a bit, update the menus and mouse shape for the
@@ -2914,7 +2921,35 @@ gui_wait_for_chars(long wtime)
 	/* Blink when waiting for a character.	Probably only does something
 	 * for showmatch() */
 	gui_mch_start_blink();
-	retval = gui_wait_for_chars_or_timer(wtime);
+
+#ifdef FEAT_GDB
+	while ((retval = gui_wait_for_chars_or_timer(wtime)) == FAIL)
+	{
+	    if (gdb_event(gdb) && gdb_allowed(gdb))
+	    {
+		gui_mch_stop_blink();	// cursor off while drawing status line
+# if defined(HAVE_GETTIMEOFDAY) && defined(HAVE_SYS_TIME_H)
+		if ((wtime = gdb_process_output(gdb, wtime, (void *)&start_tv)) < 0)
+# else
+		/* guess we got interrupted halfway */
+		wtime = wtime / 2;
+
+		if ((wtime = gdb_process_output(gdb, wtime, NULL)) < 0)
+# endif
+		{
+		    return 0;    /* launch input-line window */
+		}
+		gui_mch_start_blink();
+
+		if (wtime == 0L)
+		    break;
+	    }
+	    else
+		break;
+	}
+#else
+	retval = gui_mch_wait_for_chars(wtime);
+#endif
 	gui_mch_stop_blink();
 	return retval;
     }
@@ -2930,7 +2965,27 @@ gui_wait_for_chars(long wtime)
      * 'updatetime' and if nothing is typed within that time put the
      * K_CURSORHOLD key in the input buffer.
      */
+# ifdef FEAT_GDB
+    for (;;)
+    {
+	retval = gui_mch_wait_for_chars(p_ut);
+	if (retval == FAIL && gdb_event(gdb) && gdb_allowed(gdb))
+	{
+	    gui_mch_stop_blink();	// cursor off while drawing status line
+	    if (gdb_process_output(gdb, -1L, NULL) < 0)
+	    {
+		return 0;    /* launch input-line window */
+	    }
+	    gui_mch_start_blink();
+	}
+	else
+	    break;
+    }
+
+    if (retval == OK)
+# else
     if (gui_wait_for_chars_or_timer(p_ut) == OK)
+# endif
 	retval = OK;
 #ifdef FEAT_AUTOCMD
     else if (trigger_cursorhold())
@@ -2951,7 +3006,25 @@ gui_wait_for_chars(long wtime)
     {
 	/* Blocking wait. */
 	before_blocking();
-	retval = gui_wait_for_chars_or_timer(-1L);
+#ifdef FEAT_GDB
+	for (;;)
+	{
+	    retval = gui_wait_for_chars_or_timer(-1L);
+	    if (retval == FAIL && gdb_event(gdb) && gdb_allowed(gdb))
+	    {
+		gui_mch_stop_blink();	// cursor off while drawing status line
+		if (gdb_process_output(gdb, -1L, NULL) < 0)
+		{
+		    return 0;    /* launch input-line window */
+		}
+		gui_mch_start_blink();
+	    }
+	    else
+		break;
+	}
+#else
+	retval = gui_mch_wait_for_chars(-1L);
+#endif
     }
 
     gui_mch_stop_blink();

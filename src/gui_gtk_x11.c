@@ -6494,7 +6494,13 @@ gui_mch_draw_part_cursor(int w, int h, guicolor_T color)
 gui_mch_update(void)
 {
     while (g_main_context_pending(NULL) && !vim_is_input_buf_full())
+    {
+#ifdef FEAT_GDB
+	if (gdb_event(gdb))	/* got a gdb event */
+	    return;
+#endif
 	g_main_context_iteration(NULL, TRUE);
+    }
 }
 
 #if GTK_CHECK_VERSION(3,0,0)
@@ -6512,6 +6518,24 @@ input_timer_cb(gpointer data)
     return FALSE;		/* don't happen again */
 }
 
+#ifdef FEAT_GDB
+/*
+ * Callback function, used when data is available on the gdb file descriptor.
+ */
+/* ARGSUSED */
+    static void
+gdb_request_cb(
+    gpointer	data,
+    gint	source_fd,
+    GdkInputCondition condition)
+{
+    gdb_set_event(gdb, TRUE);
+
+    if (gtk_main_level() > 0)
+	gtk_main_quit();
+}
+#endif
+
 /*
  * GUI input routine called by gui_wait_for_chars().  Waits for a character
  * from the keyboard.
@@ -6524,9 +6548,33 @@ input_timer_cb(gpointer data)
     int
 gui_mch_wait_for_chars(long wtime)
 {
+#ifdef FEAT_GDB
+    static int gdb_on        = 0;
+    static gint gdb_input_id = 0;
+#endif
+
     int focus;
     guint timer;
     static int timed_out;
+
+#ifdef FEAT_GDB
+    /* Remove call back for previous gdb connection */
+    if (! gdb_allowed(gdb) && gdb_on)
+    {
+	if (gdb_input_id)
+	    gdk_input_remove(gdb_input_id);
+	gdb_on = 0;
+    }
+
+    /* A new gdb connection */
+    if (gdb_allowed(gdb) && !gdb_on)
+    {
+	/* Add gdb file descriptor to watch for available data in main loop. */
+	gdb_input_id = gdk_input_add(gdb_fd(gdb),
+			       GDK_INPUT_READ, gdb_request_cb, NULL);
+	gdb_on = 1;
+    }
+#endif
 
     timed_out = FALSE;
 
@@ -6579,6 +6627,15 @@ gui_mch_wait_for_chars(long wtime)
 #endif
 	    return OK;
 	}
+
+#ifdef FEAT_GDB
+	if (wtime != 0L && gdb_allowed(gdb) && gdb_event(gdb))
+	{
+	    if (timer != 0 && !timed_out)
+		gtk_timeout_remove(timer);
+	    return FAIL;
+	}
+#endif
     } while (wtime < 0 || !timed_out);
 
     /*

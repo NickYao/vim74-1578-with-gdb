@@ -317,14 +317,14 @@ CClink = $(CC)
 # Change this to your desire and do 'make config' afterwards
 
 # examples (can only use one!):
-#CONF_ARGS = --exec-prefix=/usr
+# CONF_ARGS = --exec-prefix=/usr/bin
 #CONF_ARGS = --with-vim-name=vim7 --with-ex-name=ex7 --with-view-name=view7
 #CONF_ARGS = --with-global-runtime=/etc/vim
-#CONF_ARGS = --with-local-dir=/usr/share
+# CONF_ARGS = --with-local-dir=/usr/share
 #CONF_ARGS = --without-local-dir
 
 # Use this one if you distribute a modified version of Vim.
-#CONF_ARGS = --with-modified-by="John Doe"
+CONF_ARGS = --with-modified-by="Larrupingpig"
 
 # GUI - For creating Vim with GUI (gvim) (B)
 # Uncomment this line when you don't want to get the GUI version, although you
@@ -336,6 +336,7 @@ CClink = $(CC)
 # The automatic check will use another one that can be found.
 # Gnome is disabled by default, it may cause trouble.
 #CONF_OPT_GUI = --disable-gtk2-check
+CONF_OPT_GUI = --enable-gtk2-check
 #CONF_OPT_GUI = --enable-gnome2-check
 #CONF_OPT_GUI = --disable-motif-check
 #CONF_OPT_GUI = --disable-athena-check
@@ -355,9 +356,9 @@ CClink = $(CC)
 # --enable-gui=gtk or leave out --enable-gnome-check.
 #
 # If the selected GUI isn't found, the GUI is disabled automatically
-#CONF_OPT_GUI = --enable-gui=gtk2
+CONF_OPT_GUI = --enable-gui=gtk2
 #CONF_OPT_GUI = --enable-gui=gtk2 --disable-gtktest
-#CONF_OPT_GUI = --enable-gui=gnome2
+# CONF_OPT_GUI = --enable-gui=gnome2
 #CONF_OPT_GUI = --enable-gui=gnome2 --disable-gtktest
 #CONF_OPT_GUI = --enable-gui=motif
 #CONF_OPT_GUI = --enable-gui=motif --with-motif-lib="-static -lXm -shared"
@@ -389,7 +390,7 @@ CClink = $(CC)
 # First one is for static linking, second one for dynamic loading.
 # Use --with-luajit if you want to use LuaJIT instead of Lua.
 # Set PATH environment variable to find lua or luajit executable.
-#CONF_OPT_LUA = --enable-luainterp
+CONF_OPT_LUA = --enable-luainterp
 #CONF_OPT_LUA = --enable-luainterp=dynamic
 #CONF_OPT_LUA = --enable-luainterp --with-luajit
 #CONF_OPT_LUA = --enable-luainterp=dynamic --with-luajit
@@ -415,7 +416,7 @@ CClink = $(CC)
 # When you get an error for a missing "perl.exp" file, try creating an empty
 # one: "touch perl.exp".
 # This requires at least "small" features, "tiny" doesn't work.
-#CONF_OPT_PERL = --enable-perlinterp
+CONF_OPT_PERL = --enable-perlinterp
 #CONF_OPT_PERL = --enable-perlinterp=dynamic
 
 # PYTHON
@@ -430,7 +431,7 @@ CClink = $(CC)
 # dlopen(), dlsym(), dlclose(), i.e. pythonX.Y.so must be available
 # However, this may still cause problems, such as "import termios" failing.
 # Build two separate versions of Vim in that case.
-#CONF_OPT_PYTHON = --enable-pythoninterp
+CONF_OPT_PYTHON = --enable-pythoninterp
 #CONF_OPT_PYTHON = --enable-pythoninterp=dynamic
 #CONF_OPT_PYTHON3 = --enable-python3interp
 #CONF_OPT_PYTHON3 = --enable-python3interp=dynamic
@@ -439,7 +440,7 @@ CClink = $(CC)
 # Uncomment this when you want to include the Ruby interface.
 # First one for static linking, second one for loading when used.
 # Note: you need the development package (e.g., ruby1.9.1-dev on Ubuntu).
-#CONF_OPT_RUBY = --enable-rubyinterp
+CONF_OPT_RUBY = --enable-rubyinterp
 #CONF_OPT_RUBY = --enable-rubyinterp=dynamic
 #CONF_OPT_RUBY = --enable-rubyinterp --with-ruby-command=ruby1.9.1
 
@@ -452,15 +453,19 @@ CClink = $(CC)
 
 # CSCOPE
 # Uncomment this when you want to include the Cscope interface.
-#CONF_OPT_CSCOPE = --enable-cscope
+CONF_OPT_CSCOPE = --enable-cscope
 
 # WORKSHOP - Sun Visual Workshop interface.  Only works with Motif!
 #CONF_OPT_WORKSHOP = --enable-workshop
+
+# GDB - Include support for gdb
+CONF_OPT_GDB = --enable-gdb
 
 # NETBEANS - NetBeans interface. Only works with Motif, GTK, and gnome.
 # Motif version must have XPM libraries (see |workshop-xpm|).
 # Uncomment this when you do not want the netbeans interface.
 #CONF_OPT_NETBEANS = --disable-netbeans
+CONF_OPT_NETBEANS = --enable-netbeans
 
 # CHANNEL - inter process communication. Same conditions as NetBeans.
 # Uncomment this when you do not want inter process communication.
@@ -471,7 +476,7 @@ CClink = $(CC)
 # It's automatically enabled with normal features, GTK or IME support.
 # Note: Compile on a machine where setlocale() actually works, otherwise the
 # configure tests may fail.
-#CONF_OPT_MULTIBYTE = --enable-multibyte
+CONF_OPT_MULTIBYTE = --enable-multibyte
 
 # NLS - National Language Support
 # Uncomment this when you do not want to support translated messages, even
@@ -483,13 +488,13 @@ CClink = $(CC)
 # When omitted it's automatically enabled for the X-windows GUI.
 # HANGUL - Input Hangul (Korean) language using internal routines.
 # Uncomment one of these when you want to input a multibyte language.
-#CONF_OPT_INPUT = --enable-xim
+CONF_OPT_INPUT = --enable-xim
 #CONF_OPT_INPUT = --disable-xim
 #CONF_OPT_INPUT = --enable-hangulinput
 
 # FONTSET - X fontset support for output of languages with many characters.
 # Uncomment this when you want to output a multibyte language.
-#CONF_OPT_OUTPUT = --enable-fontset
+CONF_OPT_OUTPUT = --enable-fontset
 
 # ACL - Uncomment this when you do not want to include ACL support, even
 # though your system does support it.  E.g., when it's buggy.
@@ -512,10 +517,11 @@ CClink = $(CC)
 #CONF_OPT_FEAT = --with-features=small
 #CONF_OPT_FEAT = --with-features=normal
 #CONF_OPT_FEAT = --with-features=big
-#CONF_OPT_FEAT = --with-features=huge
+CONF_OPT_FEAT = --with-features=huge
 
 # COMPILED BY - For including a specific e-mail address for ":version".
 #CONF_OPT_COMPBY = "--with-compiledby=John Doe <JohnDoe@yahoo.com>"
+CONF_OPT_COMPBY = "--with-compiledby=Larrupingpig"
 
 # X WINDOWS DISABLE - For creating a plain Vim without any X11 related fancies
 # (otherwise Vim configure will try to include xterm titlebar access)
@@ -523,6 +529,7 @@ CClink = $(CC)
 # When both GUI and X11 have been disabled this may save about 15% of the
 # code and make Vim startup quicker.
 #CONF_OPT_X = --without-x
+CONF_OPT_X = --with-x
 
 # X WINDOWS DIRECTORY - specify X directories
 # If configure can't find you X stuff, or if you have multiple X11 derivatives
@@ -573,16 +580,17 @@ CClink = $(CC)
 #CFLAGS = -O -FOlimit,2000
 
 # Often used for GCC: mixed optimizing, lot of optimizing, debugging
-#CFLAGS = -g -O2 -fno-strength-reduce -Wall -Wshadow -Wmissing-prototypes
+# CFLAGS = -g -O2 -fno-strength-reduce -Wall -Wshadow -Wmissing-prototypes
 #CFLAGS = -g -O2 -fno-strength-reduce -Wall -Wmissing-prototypes
 #CFLAGS = -g -Wall -Wmissing-prototypes
-#CFLAGS = -O6 -fno-strength-reduce -Wall -Wshadow -Wmissing-prototypes
+# CFLAGS = -O6 -fno-strength-reduce -Wall -Wshadow -Wmissing-prototypes
+CFLAGS = -O6
 #CFLAGS = -g -DDEBUG -Wall -Wshadow -Wmissing-prototypes
 #CFLAGS = -g -O2 '-DSTARTUPTIME="vimstartup"' -fno-strength-reduce -Wall -Wmissing-prototypes
 
 # Use this with GCC to check for mistakes, unused arguments, etc.
-#CFLAGS = -g -Wall -Wextra -Wmissing-prototypes -Wunreachable-code -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=1
-#CFLAGS = -g -O2 -Wall -Wextra -Wmissing-prototypes -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=1 -DU_DEBUG
+# CFLAGS = -g -Wall -Wextra -Wmissing-prototypes -Wunreachable-code -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=1
+# CFLAGS = -g -O2 -Wall -Wextra -Wmissing-prototypes -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=1 -DU_DEBUG
 #PYTHON_CFLAGS_EXTRA = -Wno-missing-field-initializers
 #MZSCHEME_CFLAGS_EXTRA = -Wno-unreachable-code -Wno-unused-parameter
 
@@ -889,7 +897,7 @@ SANITIZER_LIBS = $(SANITIZER_CFLAGS)
 ###	 On AIX 4.2.1 (and other versions probably), libtermcap is reported
 ###	 not to display properly.
 ### after changing this, you need to do "make reconfig".
-#CONF_TERM_LIB = --with-tlib=curses
+CONF_TERM_LIB = --with-tlib=curses
 
 ### (E)  If you want to use termlib library instead of the automatically found
 ###	 one.  After changing this, you need to do "make reconfig".
@@ -976,11 +984,11 @@ TOOLS = xxd/xxd$(EXEEXT)
 # executable and a common directory for the other files.
 #
 # Uncomment the next line to install Vim in "/usr/bin"
-#BINDIR   = /usr/bin
+BINDIR   = /opt/bin
 # Uncomment the next line to install Vim manuals in "/usr/share/man/man1"
-#MANDIR   = /usr/share/man
+MANDIR   = /opt/share/man
 # Uncomment the next line to install Vim help files in "/usr/share/vim"
-#DATADIR  = /usr/share
+DATADIR  = /opt/share
 
 ### DESTDIR	root of the installation tree.  This is prepended to the other
 #		directories.  This directory must exist.
@@ -1529,6 +1537,7 @@ SRC =	$(BASIC_SRC) \
 	$(PYTHON_SRC) $(PYTHON3_SRC) \
 	$(TCL_SRC) \
 	$(RUBY_SRC) \
+	$(GDB_SRC) \
 	$(WORKSHOP_SRC) \
 	$(WSDEBUG_SRC)
 
@@ -1536,6 +1545,7 @@ TAGS_SRC = *.c *.cpp if_perl.xs
 
 EXTRA_SRC = hangulin.c if_lua.c if_mzsch.c auto/if_perl.c if_perlsfio.c \
 	    if_python.c if_python3.c if_tcl.c if_ruby.c \
+	    gdb.c clewn/gdb_lvl2.c clewn/gdb_lvl3.c clewn/misc.c clewn/obstack.c \
 	    gui_beval.c workshop.c wsdebug.c integration.c \
 	    netbeans.c channel.c \
 	    $(GRESOURCE_SRC)
@@ -1557,6 +1567,7 @@ ALL_SRC = $(BASIC_SRC) $(ALL_GUI_SRC) $(UNITTEST_SRC) $(EXTRA_SRC)
 # The perl sources also don't work well with lint.
 LINT_SRC = $(BASIC_SRC) $(GUI_SRC) $(HANGULIN_SRC) \
 	   $(PYTHON_SRC) $(PYTHON3_SRC) $(TCL_SRC) \
+	   $(GDB_SRC) \
 	   $(WORKSHOP_SRC) $(WSDEBUG_SRC) \
 	   $(NETBEANS_SRC) $(CHANNEL_SRC)
 #LINT_SRC = $(SRC)
@@ -1623,6 +1634,7 @@ OBJ_COMMON = \
 	$(RUBY_OBJ) \
 	$(OS_EXTRA_OBJ) \
 	$(WORKSHOP_OBJ) \
+	$(GDB_OBJ) \
 	$(NETBEANS_OBJ) \
 	$(CHANNEL_OBJ) \
 	$(WSDEBUG_OBJ)
@@ -1702,6 +1714,7 @@ PRO_AUTO = \
 	window.pro \
 	gui_beval.pro \
 	workshop.pro \
+	gdb.pro \
 	netbeans.pro \
 	channel.pro \
 	$(ALL_GUI_PRO) \
@@ -1745,6 +1758,7 @@ config auto/config.mk: auto/configure config.mk.in config.h.in
 		$(CONF_OPT_TCL) $(CONF_OPT_RUBY) $(CONF_OPT_NLS) \
 		$(CONF_OPT_CSCOPE) $(CONF_OPT_MULTIBYTE) $(CONF_OPT_INPUT) \
 		$(CONF_OPT_OUTPUT) $(CONF_OPT_GPM) $(CONF_OPT_WORKSHOP) \
+		$(CONF_OPT_GDB) \
 		$(CONF_OPT_FEAT) $(CONF_TERM_LIB) \
 		$(CONF_OPT_COMPBY) $(CONF_OPT_ACL) $(CONF_OPT_NETBEANS) \
 		$(CONF_OPT_CHANNEL) \
@@ -2945,6 +2959,21 @@ objects/window.o: window.c
 objects/workshop.o: workshop.c
 	$(CCC) -o $@ workshop.c
 
+objects/gdb.o: gdb.c
+	$(CCC) -o $@ gdb.c
+
+objects/gdb_lvl2.o: clewn/gdb_lvl2.c
+	$(CCC) -o $@ clewn/gdb_lvl2.c
+
+objects/gdb_lvl3.o: clewn/gdb_lvl3.c
+	$(CCC) -o $@ clewn/gdb_lvl3.c
+
+objects/misc.o: clewn/misc.c
+	$(CCC) -o $@ clewn/misc.c
+
+objects/obstack.o: clewn/obstack.c
+	$(CCC) -o $@ clewn/obstack.c
+
 objects/wsdebug.o: wsdebug.c
 	$(CCC) -o $@ wsdebug.c
 
@@ -3376,6 +3405,13 @@ objects/workshop.o: workshop.c auto/config.h integration.h vim.h feature.h \
  os_unix.h auto/osdef.h ascii.h keymap.h term.h macros.h option.h \
  structs.h regexp.h gui.h gui_beval.h proto/gui_beval.pro alloc.h \
  ex_cmds.h proto.h globals.h farsi.h arabic.h version.h workshop.h
+objects/gdb.o: gdb.c clewn/gdb.h clewn/misc.h auto/config.h vim.h feature.h
+objects/gdb_lvl2.o: clewn/misc.h clewn/gdb_lvl2.c clewn/gdb_lvl3.c \
+	gdb.c clewn/gdb.h auto/config.h vim.h feature.h
+objects/gdb_lvl3.o: clewn/misc.h clewn/gdb_lvl3.c gdb.c clewn/gdb.h\
+	auto/config.h vim.h feature.h
+objects/misc.o: clewn/misc.c clewn/misc.h
+objects/obstack.o: clewn/obstack.c clewn/obstack.h
 objects/wsdebug.o: wsdebug.c
 objects/integration.o: integration.c vim.h auto/config.h feature.h os_unix.h \
  auto/osdef.h ascii.h keymap.h term.h macros.h option.h structs.h \

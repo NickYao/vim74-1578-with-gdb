@@ -545,6 +545,12 @@ static struct vimoption options[] =
 			    {(char_u *)0L, (char_u *)0L}
 #endif
 			    SCRIPTID_INIT},
+#ifdef FEAT_GDB
+    {"asm",	    NULL,   P_NUM|P_VI_DEF,
+			    (char_u *)&p_asm, PV_NONE,
+			    {(char_u *)10L, (char_u *)0L}},
+#endif
+
 #ifdef FEAT_AUTOCHDIR
     {"autochdir",  "acd",   P_BOOL|P_VI_DEF,
 			    (char_u *)&p_acd, PV_NONE,
@@ -1258,6 +1264,14 @@ static struct vimoption options[] =
 			    {(char_u *)FALSE, (char_u *)0L}
 #endif
 			    SCRIPTID_INIT},
+#ifdef FEAT_GDB
+    {"gdbvariables", "gdbvar",P_STRING|P_EXPAND|P_VI_DEF|P_SECURE,
+			    (char_u *)&p_gvar, PV_NONE,
+			    {(char_u *)"gdb-variables", (char_u *)0L} },
+    {"gdbprg",	    "gdp",  P_STRING|P_EXPAND|P_VI_DEF|P_SECURE,
+			    (char_u *)&p_gdp, PV_NONE,
+			    {(char_u *)"gdb", (char_u *)0L} },
+#endif
     {"gdefault",    "gd",   P_BOOL|P_VI_DEF|P_VIM,
 			    (char_u *)&p_gd, PV_NONE,
 			    {(char_u *)FALSE, (char_u *)0L} SCRIPTID_INIT},
