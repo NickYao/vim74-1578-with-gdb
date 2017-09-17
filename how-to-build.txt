@@ -1,0 +1,51 @@
+编译vimgdb
+1.	下载vim-7.3.tar.bz和vimgdb-7.3-patch.
+2.	打补丁
+tar jxvf vim-7.3.tar.bz2  -C tmp/
+mv vimgdb-for-vim7.3-master.zip tmp/
+cd tmp/
+unzip vimgdb-for-vim7.3-master.zip
+patch –p0 < vimgdb-for-vim7.3-master/vim73.patch
+3.	准备环境
+sudo apt-get install libncurses5-dev libgnome2-dev libgnomeui-dev libgtk2.0-dev libatk1.0-dev libbonoboui2-dev libcairo2-dev libncurses5 libncurses5-dbg libncurses5-dev lua5.1 lua5.1-dev
+4.	编译配置
+./configure --with-features=huge --enable-rubyinterp --enable-pythoninterp --with-python-config-dir=/usr/lib/python2.7/config-x86_64-linux-gnu/ enable-luainterp --enable-perlinterp --enable-multibyte --prefix=/home/nick/bin --enable-gdb
+./configure --with-features=huge \
+            --enable-multibyte \
+            --enable-rubyinterp=yes \
+            --enable-pythoninterp=yes \
+            --with-python-config-dir=ls /usr/lib/python2.7/config-x86_64-linux-gnu \
+            --enable-python3interp=yes \
+            --with-python3-config-dir=/usr/lib/python3.4/config-3.4m-x86_64-linux-gnu/ \
+            --enable-perlinterp=yes \
+            --enable-luainterp=yes \
+            --enable-gui=gtk2 \
+            --enable-cscope \
+            --prefix=/home/nick/software/ \
+	--enable-gdb
+
+
+5.	编译并安装
+Make && make install
+6.	编译完成之后到/home/nick/bin/bin下面可以找vim的可执行文件。
+./vim –version | grep gdb
+./vim –version | grep cscope
+./vim –version | tags
+7.	修改.bashrc,使系统默认调用/home/nick/bin/bin目录下的vim
+Alias vim=”/home/nick/bin/bin/vim”
+8.	拷贝插件到.vim目录.
+cp -rf /tmp/vimgdb-for-vim7.3-master /vimgdb_runtime/* ~/.vim
+9.	在.vimrc中添加gdb启动的配置.
+run macros/gdb_mappings.vim 
+10.	至此,vimgdb已经全部配置完成,可以在vim中调用gdb来调试了. 具体的gdb命令参照.vim/doc/gdb.txt
+
+由于内核的目标程序都是基于arm交叉编译工具编译出来的,所以需要安装arm-linux-gdb来调试程序.
+Arm-linux-gdb编译
+1.	下载gdb7.6
+2.	解压tar zxvf gdb-7.6.tar.gz
+3.	编译
+./configure --target=arm-linux --prefix=/home/nick/bin
+make && make install
+4.	在.vimrc中需指定gdbpg.
+set gdbprg=/home/nick/software/bin/arm-linux-gdb
+这样才会调用arm-linux-gdb来调试程序
