@@ -206,7 +206,7 @@ static RETSIGTYPE sig_alarm SIGPROTOARG;
 static volatile int sig_alarm_called;
 #endif
 #if defined(FEAT_GDB) && defined(SIGCHLD)
-static RETSIGTYPE gdb_catch_sigchld __ARGS(SIGPROTOARG);
+static RETSIGTYPE gdb_catch_sigchld SIGPROTOARG;
 #endif
 static RETSIGTYPE deathtrap SIGPROTOARG;
 

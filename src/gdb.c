@@ -777,7 +777,7 @@ module_init()
 	 * careful: must free inputrc with vim_free
 	 * We don't know yet if we are going to use GDB/MI, so we need to
 	 * setup inputrc just in case, even though it might never be used */
-	if ((inputrc = vim_tempname((int)'A')) != NULL
+	if ((inputrc = vim_tempname((int)'A', TRUE)) != NULL
 		&& (fd = mch_open((char *)inputrc, O_CREAT | O_RDWR | O_EXTRA, 0644)) >= 0)
 	{
 	    for (p = readline; *p; p++)
@@ -1575,7 +1575,7 @@ gdb_popup_console(this)
     /* get a unique name */
     if (this->buf == NULL &&
 	    (! (this->state & GS_UP)
-	     || (name = vim_tempname((int)'A')) == NULL))
+	     || (name = vim_tempname((int)'A', TRUE)) == NULL))
 	return;
 
     /* get splitbelow and splitright options values */

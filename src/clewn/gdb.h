@@ -23,6 +23,10 @@
 #ifndef GDB_H
 # define GDB_H
 
+#ifndef __ARGS
+#define __ARGS(x) x
+#endif
+
 #define obstack_chunk_alloc  malloc
 #define obstack_chunk_free   free
 #define obstack_strsave(o,s) (char_u *)obstack_copy0((o), (s), STRLEN((s)))

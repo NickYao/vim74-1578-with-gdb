@@ -24,7 +24,7 @@
 # include <config.h>
 #else
 # include <auto/config.h>
-void vim_beep ();
+void vim_beep(unsigned val);
 #endif
 
 #include <stdio.h>
@@ -324,7 +324,7 @@ clewn_beep()
     ding();	/* deprecated */
 # endif
 #else
-    vim_beep();
+    vim_beep(BO_ERROR);
 #endif
 }
 

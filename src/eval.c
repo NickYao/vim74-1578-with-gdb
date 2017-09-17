@@ -571,7 +571,7 @@ static void f_foreground(typval_T *argvars, typval_T *rettv);
 static void f_function(typval_T *argvars, typval_T *rettv);
 static void f_garbagecollect(typval_T *argvars, typval_T *rettv);
 #ifdef FEAT_GDB
-static void f_gdb __ARGS((typval_T *argvars, typval_T *rettv));
+static void f_gdb(typval_T *argvars, typval_T *rettv);
 #endif
 static void f_get(typval_T *argvars, typval_T *rettv);
 static void f_getbufline(typval_T *argvars, typval_T *rettv);
