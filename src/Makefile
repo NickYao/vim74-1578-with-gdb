@@ -984,11 +984,12 @@ TOOLS = xxd/xxd$(EXEEXT)
 # executable and a common directory for the other files.
 #
 # Uncomment the next line to install Vim in "/usr/bin"
-BINDIR   = /opt/bin
+PREFIX = ~/software/vim74
+BINDIR   = $(PREFIX)/bin
 # Uncomment the next line to install Vim manuals in "/usr/share/man/man1"
-MANDIR   = /opt/share/man
+MANDIR   = $(PREFIX)/share/man
 # Uncomment the next line to install Vim help files in "/usr/share/vim"
-DATADIR  = /opt/share
+DATADIR  = $(PREFIX)/share
 
 ### DESTDIR	root of the installation tree.  This is prepended to the other
 #		directories.  This directory must exist.

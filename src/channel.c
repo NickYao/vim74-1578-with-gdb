@@ -3024,12 +3024,13 @@ channel_get_timeout(channel_T *channel, int part)
     return channel->ch_part[part].ch_timeout;
 }
 
+#if 0
 /*
  * Get a callback from "arg".  It can be a Funcref or a function name.
  * When "arg" is zero return an empty string.
  * Return NULL for an invalid argument.
  */
-    static char_u *
+char_u *
 get_callback(typval_T *arg, partial_T **pp)
 {
     if (arg->v_type == VAR_PARTIAL && arg->vval.v_partial != NULL)
@@ -3045,6 +3046,7 @@ get_callback(typval_T *arg, partial_T **pp)
     EMSG(_("E921: Invalid callback argument"));
     return NULL;
 }
+#endif
 
     static int
 handle_mode(typval_T *item, jobopt_T *opt, ch_mode_T *modep, int jo)
